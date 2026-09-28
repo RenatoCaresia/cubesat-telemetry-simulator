@@ -1,12 +1,16 @@
 import time
-from telemetry import generate_telemetry
+from telemetry import CubeSat
 
+
+satellite = CubeSat()
 
 print("CubeSat Telemetry Simulator")
 print("---------------------------")
 
 while True:
-    telemetry_data= generate_telemetry()
+    satellite.update_state()
+
+    telemetry_data = satellite.generate_telemetry()
 
     print(telemetry_data)
 
