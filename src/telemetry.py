@@ -10,7 +10,7 @@ class CubeSat:
         self.signal_dbm = -70.0
 
     def update_state(self):
-        self.battery_percent -= 0.2
+        self.battery_percent = max(0, self.battery_percent - 0.2)
 
         self.temperature_c += random.uniform(-0.5, 0.5)
         self.altitude_km += random.uniform(-0.2, 0.2)
@@ -25,5 +25,20 @@ class CubeSat:
             "altitude_km": round(self.altitude_km, 2),
             "velocity_km_s": round(self.velocity_km_s, 2),
             "signal_dbm": round(self.signal_dbm, 2)
-        }
+    
+         }
+    
+    def check_alerts(self):
+        alerts = []
+
+        if self.battery_percent < 20:
+            alerts.append("WARNING: LOW BATTERY")
+
+        if self.temperature_c > 40:
+            alerts.append("WARNING: HIGH TEMPERATURE")
+
+        if self.signal_dbm < -85:
+            alerts.append("WARNING: WEAK SIGNAL")
+
+        return alerts
 
