@@ -1,20 +1,23 @@
 import csv
 import os
+from database import TelemetryDatabase
 
 class GroundStation:
     def __init__(self, name):
+        self.database = TelemetryDatabase()
         self.name = name
         self.received_packets = 0
         self.last_sequence = 0
         self.log_file = "data/telemetry_log.csv"
 
         os.makedirs("data", exist_ok=True)
-        
+
         if not os.path.exists(self.log_file):
             with open(self.log_file, mode="w", newline="") as file:
                 writer = csv.writer(file)
 
                 writer.writerow([
+                "mission_id",
                 "timestamp",
                 "satellite_id",
                 "sequence",
@@ -44,7 +47,7 @@ class GroundStation:
         print(f"Packet #{current_sequence} received")
         print(packet)
 
-        self.log_telemetry(packet)
+        self.database.save_packet(packet)
         
     def log_telemetry(self, packet):
         data = packet["data"]
@@ -53,6 +56,7 @@ class GroundStation:
             writer = csv.writer(file)
 
             writer.writerow([
+                packet["mission_id"],
                 packet["timestamp"],
                 packet["satellite_id"],
                 packet["sequence"],

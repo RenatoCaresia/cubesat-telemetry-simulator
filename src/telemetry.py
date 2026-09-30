@@ -1,8 +1,9 @@
-import random
+import numpy as np
 from datetime import datetime
 
 class CubeSat:
     def __init__(self):
+        self.mission_id = datetime.now().strftime("MISSION-%Y%m%d-%H%M%S")
         self.satellite_id = "SAT-01"
         self.sequence = 0
         self.battery_percent = 100.0
@@ -10,19 +11,21 @@ class CubeSat:
         self.altitude_km = 500.0
         self.velocity_km_s = 7.6
         self.signal_dbm = -70.0
+       
 
     def update_state(self):
         self.battery_percent = max(0, self.battery_percent - 0.2)
 
-        self.temperature_c += random.uniform(-0.5, 0.5)
-        self.altitude_km += random.uniform(-0.2, 0.2)
-        self.velocity_km_s += random.uniform(-0.01, 0.01)
-        self.signal_dbm += random.uniform(-1, 1)
+        self.temperature_c += np.random.normal(0, 0.2)
+        self.altitude_km += np.random.normal(0, 0.05)
+        self.velocity_km_s += np.random.normal(0, 0.005)
+        self.signal_dbm += np.random.normal(0, 0.5)
 
     def generate_telemetry(self):
         self.sequence += 1
 
         packet = {
+            "mission_id": self.mission_id,
             "satellite_id": self.satellite_id,
             "sequence": self.sequence,
             "timestamp": datetime.now().isoformat(),
